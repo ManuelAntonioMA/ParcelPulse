@@ -1,6 +1,10 @@
 spring:
   application:
     name: parcelpulse
+  security:
+    user:
+      name: admin
+      password: admin
   datasource:
     url: jdbc:postgresql://localhost:5432/parcelpulse
     username: parcelpulse

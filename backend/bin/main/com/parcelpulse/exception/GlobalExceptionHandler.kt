@@ -21,4 +21,14 @@ class GlobalExceptionHandler {
         val errorBody = mapOf("error" to "Validation failed", "details" to errors)
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorBody)
     }
+
+    @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException::class)
+    fun handleOptimisticLocking(ex: org.springframework.orm.ObjectOptimisticLockingFailureException): ResponseEntity<Any> {
+        val errorBody = mapOf(
+            "error" to "Inventory Conflict",
+            "message" to "Another user is currently purchasing this item. Please try again."
+        )
+        // 409 Conflict is the standard HTTP status for concurrent edit failures
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorBody)
+    }
 }

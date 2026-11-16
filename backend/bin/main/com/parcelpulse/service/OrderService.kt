@@ -13,7 +13,8 @@ import java.math.BigDecimal
 @Service
 class OrderService(
     private val orderRepository: OrderRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val inventoryService: InventoryService // Inject the new service
 ) {
     @Transactional
     fun createOrder(request: OrderRequest): OrderResponse {
@@ -24,6 +25,9 @@ class OrderService(
             val product = productRepository.findById(itemReq.productId)
                 .orElseThrow { IllegalArgumentException("Product ${itemReq.productId} not found") }
             
+            // RESERVE THE INVENTORY FIRST!
+            inventoryService.reserveInventory(product.id, itemReq.quantity)
+
             val orderItem = OrderItem(
                 productId = product.id,
                 quantity = itemReq.quantity,
