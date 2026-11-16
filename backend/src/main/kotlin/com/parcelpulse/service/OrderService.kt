@@ -5,7 +5,6 @@ import com.parcelpulse.domain.OrderItem
 import com.parcelpulse.dto.OrderRequest
 import com.parcelpulse.dto.OrderResponse
 import com.parcelpulse.repository.OrderRepository
-import com.parcelpulse.repository.ProductRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
@@ -13,8 +12,8 @@ import java.math.BigDecimal
 @Service
 class OrderService(
     private val orderRepository: OrderRepository,
-    private val productRepository: ProductRepository,
-    private val inventoryService: InventoryService // Inject the new service
+    private val productService: ProductService, // Swapped!
+    private val inventoryService: InventoryService
 ) {
     @Transactional
     fun createOrder(request: OrderRequest): OrderResponse {
@@ -22,10 +21,9 @@ class OrderService(
         var total = BigDecimal.ZERO
 
         request.items.forEach { itemReq ->
-            val product = productRepository.findById(itemReq.productId)
-                .orElseThrow { IllegalArgumentException("Product ${itemReq.productId} not found") }
+            // Fetches from Redis automatically if available!
+            val product = productService.getProduct(itemReq.productId)
             
-            // RESERVE THE INVENTORY FIRST!
             inventoryService.reserveInventory(product.id, itemReq.quantity)
 
             val orderItem = OrderItem(
