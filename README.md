@@ -1,10 +1,10 @@
-# ParcelPulse 📦⚡
+# ParcelPulse 
 
 A production-ready, full-stack e-commerce fulfillment system engineered to handle concurrent high-volume traffic, stateless authentication, and distributed caching. 
 
 Built with a **Kotlin/Spring Boot** backend and a **React/Vite** frontend, this platform demonstrates enterprise software architecture patterns including Domain-Driven Design (DDD), optimistic locking, and automated background processing.
 
-## 🚀 Key Features
+##  Key Features
 
 * **Race-Condition Resilience:** Implemented JPA Optimistic Locking to mathematically prevent inventory overselling during concurrent purchase requests. Backed by automated integration tests simulating simultaneous users.
 * **Stateless Security:** Secured REST API endpoints using JSON Web Token (JWT) authentication, Spring Security filter chains, and strict CORS preflight configurations.
@@ -13,7 +13,7 @@ Built with a **Kotlin/Spring Boot** backend and a **React/Vite** frontend, this 
 * **Asynchronous Workers:** Engineered background order fulfillment processes utilizing Spring's `@Scheduled` annotation to process transactions independently of the main request thread.
 * **Modern Web Client:** Built a fast, responsive UI using React and Vite, featuring an Axios HTTP client with automated JWT request interceptors.
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Backend (REST API)**
 * **Language:** Kotlin (JDK 21)
@@ -62,7 +62,7 @@ cd frontend
 npm install
 npm run dev
 
-🧪 Testing
+ Testing:
 The backend includes an automated integration test suite verifying concurrency control. To run the race-condition simulation that proves the system's resilience to inventory overselling:
 
 cd backend
