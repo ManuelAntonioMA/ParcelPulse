@@ -23,7 +23,11 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 // Allow anyone to log in and view the Swagger UI
                 auth.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                // LOCK DOWN everything else (like /api/orders)
+                
+                // NEW LINE: Let the browser's CORS preflight checks pass without a token!
+                auth.requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                
+                // LOCK DOWN everything else
                 auth.anyRequest().authenticated()
             }
             // Put our JWT filter directly in front of the standard Spring filter
