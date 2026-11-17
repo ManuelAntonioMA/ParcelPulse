@@ -30,7 +30,7 @@ Built with a **Kotlin/Spring Boot** backend and a **React/Vite** frontend, this 
 * **Containerization:** Docker & Docker Compose (for Postgres and Redis)
 * **Build Tool:** Gradle
 
-## ⚙️ Local Development Setup
+##  Local Development Setup
 
 ### Prerequisites
 * JDK 21
@@ -62,7 +62,7 @@ cd frontend
 npm install
 npm run dev
 
- Testing:
+## Testing
 The backend includes an automated integration test suite verifying concurrency control. To run the race-condition simulation that proves the system's resilience to inventory overselling:
 
 cd backend
