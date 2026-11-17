@@ -4,21 +4,31 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(
+    private val jwtAuthFilter: JwtAuthenticationFilter // Inject our new filter
+) {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            // Disable CSRF protection since this is a stateless REST API
             .csrf { it.disable() }
-            // Allow all requests to pass through without authentication for development
+            // Tell Spring we are using stateless JWTs, not server-side sessions
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
-                auth.anyRequest().permitAll()
+                // Allow anyone to log in and view the Swagger UI
+                auth.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                // LOCK DOWN everything else (like /api/orders)
+                auth.anyRequest().authenticated()
             }
+            // Put our JWT filter directly in front of the standard Spring filter
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+        
         return http.build()
     }
 }
